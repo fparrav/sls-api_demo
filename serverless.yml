@@ -12,6 +12,7 @@ provider:
   runtime: nodejs12.x
   environment: ${self:custom.settings}
   region: sa-east-1
+  stage: dev
   iamRoleStatements:
     - Effect: "Allow"
       Action:
