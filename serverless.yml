@@ -1,7 +1,6 @@
-
 service: sls-api
 
-frameworkVersion: '2'
+frameworkVersion: "3"
 
 custom:
   settings:
@@ -11,56 +10,58 @@ provider:
   name: aws
   runtime: nodejs12.x
   environment: ${self:custom.settings}
-  region: sa-east-1
+  region: us-east-1
   stage: dev
-  iamRoleStatements:
-    - Effect: "Allow"
-      Action:
-          - dynamodb:DescribeTable
-          - dynamodb:Scan
-          - dynamodb:GetItem
-          - dynamodb:PutItem
-          - dynamodb:UpdateItem
-          - dynamodb:DeleteItem
-      Resource:
-        - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.settings.POSTS_TABLE}" 
+  iam:
+    role:
+      - statements:
+          - Effect: "Allow"
+            Action:
+              - dynamodb:DescribeTable
+              - dynamodb:Scan
+              - dynamodb:GetItem
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
+              - dynamodb:DeleteItem
+            Resource:
+              - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.settings.POSTS_TABLE}"
 functions:
   createPost:
     handler: handler.createPost
     events:
-    - http:
+      - http:
         path: /post
         method: post
   getAllPosts:
     handler: handler.getAllPosts
     events:
-    - http:
-        path: /posts
-        method: get
+      - http:
+          path: /posts
+          method: get
   getPosts:
     handler: handler.getPosts
     events:
-    - http:
-        path: /posts/{number}
-        method: get
+      - http:
+          path: /posts/{number}
+          method: get
   getPost:
     handler: handler.getPost
     events:
-    - http:
-        path: /post/{id}
-        method: get
+      - http:
+          path: /post/{id}
+          method: get
   updatePost:
     handler: handler.updatePost
     events:
-    - http:
-        path: /post/{id}
-        method: put
+      - http:
+          path: /post/{id}
+          method: put
   deletePost:
     handler: handler.deletePost
     events:
-    - http:
-        path: /post/{id}
-        method: delete
+      - http:
+          path: /post/{id}
+          method: delete
 
 resources:
   Resources:
@@ -68,13 +69,12 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
-        - AttributeName: "id"
-          AttributeType: "S"
+          - AttributeName: "id"
+            AttributeType: "S"
         KeySchema:
-        - AttributeName: "id"
-          KeyType: "HASH"
+          - AttributeName: "id"
+            KeyType: "HASH"
         ProvisionedThroughput:
           ReadCapacityUnits: 1
-          WriteCapacityUnits: 1 
+          WriteCapacityUnits: 1
         TableName: ${self:custom.settings.POSTS_TABLE}
-

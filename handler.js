@@ -2,7 +2,7 @@
 
 const AWS = require('aws-sdk');
 const db = new AWS.DynamoDB.DocumentClient({
-  apiVersion: '2019-11-21'
+  apiVersion: '2012-08-10'
 });
 
 
@@ -48,11 +48,11 @@ module.exports.createPost = (event, context, callback) => {
   };
 
   return db.put({
-      TableName: postsTable,
-      Item: post
-    }).promise().then(() => {
-      callback(null, response(201, post))
-    })
+    TableName: postsTable,
+    Item: post
+  }).promise().then(() => {
+    callback(null, response(201, post))
+  })
     .catch(err => response(null, response(err.statusCode, err)));
 }
 
