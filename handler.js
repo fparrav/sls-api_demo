@@ -54,7 +54,7 @@ module.exports.createPost = (event, context, callback) => {
     callback(null, response(201, post))
   })
     .catch(err => response(null, response(err.statusCode, err)));
-}
+};
 
 /// Get all posts
 module.exports.getAllPosts = (event, context, callback) => {
@@ -149,4 +149,15 @@ module.exports.deletePost = (event, context, callback) => {
       callback(null, response(200, { message: 'Post deleted successfully' }))
     )
     .catch((err) => callback(null, response(err.statusCode, err)));
+};
+
+module.exports.triggerStream = (event, context, callback) => {
+  console.log('trigger stream was called');
+
+  const eventData = event.Records[0];
+  //console.log(eventData);
+
+  console.log(eventData.dynamodb.NewImage);
+
+  callback(null, null);
 };
